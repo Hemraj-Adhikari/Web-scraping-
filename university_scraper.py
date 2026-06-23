@@ -50,17 +50,17 @@ def find_official_website(university_name: str) -> str:
                          "usnews", "timeshighereducation", "niche", "reddit"]
         for url in results:
             if not any(kw in url.lower() for kw in skip_keywords):
-                print(f"✅ Found: {url}")
+                print(f" Found: {url}")
                 return url
         
         # Fallback: return first result
         if results:
-            print(f"✅ Using: {results[0]}")
+            print(f" Using: {results[0]}")
             return results[0]
     except ImportError:
-        print("⚠️  googlesearch not installed. Using fallback search via Anthropic.")
+        print(" googlesearch not installed. Using fallback search via Anthropic.")
     except Exception as e:
-        print(f"⚠️  Google search error: {e}")
+        print(f" Google search error: {e}")
     
     return None
 
@@ -259,11 +259,11 @@ def print_results(data: dict):
     
     # SCHOLARSHIPS
     scholarships = data.get("scholarships", [])
-    print(f"\n🎓  SCHOLARSHIPS ({len(scholarships)} found)")
+    print(f"\n SCHOLARSHIPS ({len(scholarships)} found)")
     print(sep)
     if scholarships:
         for s in scholarships:
-            print(f"  🏅 {s.get('name')}  →  {s.get('amount')}")
+            print(f"   {s.get('name')}  →  {s.get('amount')}")
             print(f"      Eligibility : {s.get('eligibility')}")
             print(f"      Covers      : {s.get('coverage')}")
             print(f"      Deadline    : {s.get('deadline')}")
@@ -272,7 +272,7 @@ def print_results(data: dict):
     
     # ENTRY CRITERIA
     ec = data.get("entryCriteria", {})
-    print(f"\n📋  ENTRY REQUIREMENTS")
+    print(f"\n ENTRY REQUIREMENTS")
     print(sep)
     
     academic = ec.get("academic", [])
@@ -300,7 +300,7 @@ def print_results(data: dict):
     # DEADLINES
     deadlines = data.get("applicationDeadlines", [])
     if deadlines:
-        print(f"\n📅  APPLICATION DEADLINES")
+        print(f"\n  APPLICATION DEADLINES")
         print(sep)
         for d in deadlines:
             print(f"  • {d}")
@@ -308,7 +308,7 @@ def print_results(data: dict):
     # CONTACT
     contact = data.get("contactInfo", {})
     if any(contact.values()):
-        print(f"\n📞  CONTACT")
+        print(f"\n  CONTACT")
         print(sep)
         if contact.get("email"):
             print(f"  Email      : {contact['email']}")
@@ -327,7 +327,7 @@ def save_to_json(data: dict, university_name: str):
     filename = university_name.lower().replace(" ", "_") + "_info.json"
     with open(filename, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
-    print(f"💾 Data saved to: {filename}")
+    print(f" Data saved to: {filename}")
 
 
 # ─────────────────────────────────────────────
@@ -335,11 +335,11 @@ def save_to_json(data: dict, university_name: str):
 # ─────────────────────────────────────────────
 def main():
     print("=" * 60)
-    print("       🏫  UNIVERSITY INFO SCRAPER  🏫")
+    print("         UNIVERSITY INFO SCRAPER  ")
     print("=" * 60)
     
     if ANTHROPIC_API_KEY == "YOUR_API_KEY_HERE":
-        print("\n⚠️  ERROR: Anthropic API key set garnu parcha!")
+        print("\n  ERROR: Anthropic API key set garnu parcha!")
         print("   Option 1: Environment variable set garnu:")
         print("             export ANTHROPIC_API_KEY='sk-ant-...'")
         print("   Option 2: Script ko top ma ANTHROPIC_API_KEY variable ma directly rakhnu\n")
@@ -347,7 +347,7 @@ def main():
     
     university_name = input("\nUniversity ko naam type garnu: ").strip()
     if not university_name:
-        print("❌ University naam empty cha!")
+        print(" University of East London")
         return
     
     # Step 1: Find website
@@ -362,19 +362,19 @@ def main():
     scraped_data = scrape_university_pages(website_url)
     
     if not scraped_data:
-        print("❌ Website scrape garna sakiyena. Site blocked cha hola.")
+        print(" Website scrape garna sakiyena. Site blocked cha hola.")
         return
     
-    print(f"✅ {len(scraped_data)} pages scraped successfully!")
+    print(f" {len(scraped_data)} pages scraped successfully!")
     
     # Step 3: Extract with Claude
     try:
         structured_data = extract_with_claude(university_name, scraped_data)
     except json.JSONDecodeError:
-        print("❌ Claude le valid JSON return garena. API key check garnu.")
+        print(" Claude le valid JSON return garena. API key check garnu.")
         return
     except Exception as e:
-        print(f"❌ Claude API error: {e}")
+        print(f" Claude API error: {e}")
         return
     
     # Step 4: Print results
